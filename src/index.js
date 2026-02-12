@@ -24,12 +24,13 @@ dbLocation.then(function(db){
     let name = await vault(8);
     //db1 needs 1 - 4
     //db2 needs 4 - 7
-    //db3 7 and up
+    //db3 7-10
     // db has company info
     // vault has personal info
     console.log("Test", name);
-
+    let completedData = [{id:0, name: "Name", username: "username", email: "e@mail.com", address:{street: "street", suite: "suite", city: "city", zipcode: "zipcode", geo:{lat:"lat", lng: "lng"}}, phone: "phone", website: "website", company:{name: "companyName", catchPhrase: "catchPhrase", bs: "string"}}]
   //
+  console.log(completedData[0]);
   //
 
 getUserData(5)
