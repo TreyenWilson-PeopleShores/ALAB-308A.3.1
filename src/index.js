@@ -21,9 +21,11 @@ import { central, db1, db2, db3, vault } from "./databases.js";
   //
 
 
-
-getUserData(3).then(function(x){ // NOT FINISHED - NEED TO LOWER TIME FROM 300 MS to 100 MS - CHECK WITH ALLAN
+console.time("request");
+getUserData(3).then(function(x){ // 
+  console.timeEnd("request");
   console.log(x);
+   // Variable time from ~160 to ~220
 })
 
 
@@ -35,14 +37,18 @@ async function getUserData(id) {
   };
   
   if(id>=1 && id<=10 && Number.isInteger(id)===true){
+   // console.time("request1");
     let dataBaseLocation = await(central(id)) //this figures out which db it is located in
-    
     const companyInfo = await dbs[dataBaseLocation](id);
     const personalInfo = await (vault(id));
+  //  const [companyInfo, personalInfo] = await Promise.all([ Substantially slower 210 - 260
+   //   dbs[dataBaseLocation](id), // Assuming this is already a Promise
+    //  vault(id)              // Assuming this is a function returning a Promise
+   // ]);
+   // console.timeEnd("request1");
     completedData[id] =  [{id:id, name: personalInfo.name, username: companyInfo.username, email: personalInfo.email, address:{street: personalInfo.address.street, suite: personalInfo.address.suite, city: personalInfo.address.suite, zipcode: personalInfo.address.zipcode, geo:{lat:personalInfo.address.geo.lat, lng: personalInfo.address.geo.lng}}, phone: personalInfo.phone, website: companyInfo.website, company:{name: companyInfo.company.name, catchPhrase: companyInfo.company.catchPhrase, bs: companyInfo.company.bs}}]
 
-    //console.log("company", companyInfo, "personal", personalInfo);
-    //console.log("Completed", completedData[id]);
+
     return completedData[id]
   }
 
