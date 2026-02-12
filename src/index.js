@@ -2,23 +2,13 @@
 import { central, db1, db2, db3, vault } from "./databases.js";
 
 
-let dbLocation = central(5);
+//let dbLocation = central(5);
 
-dbLocation.then(function(db){
-  console.log(`The user is in ${db}`)
-})
-
-//getUserData(1)
+//dbLocation.then(function(db){
+//  console.log(`The user is in ${db}`)
+//})
 
 
- /*new Promise(function (resolve, reject){
-  console.log("Initial")
-  return resolve()
-})
-  .then(function (){
-    throw new Error("Something failed");
-    console.log("Do this")
-  })*/
 
 
     let name = await vault(8);
@@ -27,43 +17,36 @@ dbLocation.then(function(db){
     //db3 7-10
     // db has company info
     // vault has personal info
-    console.log("Test", name);
     let completedData = [{id:0, name: "Name", username: "username", email: "e@mail.com", address:{street: "street", suite: "suite", city: "city", zipcode: "zipcode", geo:{lat:"lat", lng: "lng"}}, phone: "phone", website: "website", company:{name: "companyName", catchPhrase: "catchPhrase", bs: "string"}}]
   //
-  console.log(completedData[0]);
-  //
 
-getUserData(5)
 
-function getUserData(id) {
+
+getUserData(3).then(function(x){ // NOT FINISHED - NEED TO LOWER TIME FROM 300 MS to 100 MS - CHECK WITH ALLAN
+  console.log(x);
+})
+
+
+async function getUserData(id) {
   const dbs = {
     db1: db1,
     db2: db2,
     db3: db3
   };
-  console.log(dbs);
-  //const returnedValue = await central(id);
-  //console.log(returnedValue);
-  return central(id).then(function(db){
-    console.log(db);
-    return db;
-  })
-  console.log(db);
+  
+  if(id>=1 && id<=10 && Number.isInteger(id)===true){
+    let dataBaseLocation = await(central(id)) //this figures out which db it is located in
+    
+    const companyInfo = await dbs[dataBaseLocation](id);
+    const personalInfo = await (vault(id));
+    completedData[id] =  [{id:id, name: personalInfo.name, username: companyInfo.username, email: personalInfo.email, address:{street: personalInfo.address.street, suite: personalInfo.address.suite, city: personalInfo.address.suite, zipcode: personalInfo.address.zipcode, geo:{lat:personalInfo.address.geo.lat, lng: personalInfo.address.geo.lng}}, phone: personalInfo.phone, website: companyInfo.website, company:{name: companyInfo.company.name, catchPhrase: companyInfo.company.catchPhrase, bs: companyInfo.company.bs}}]
+
+    //console.log("company", companyInfo, "personal", personalInfo);
+    //console.log("Completed", completedData[id]);
+    return completedData[id]
+  }
+
+
 }
 
 
-
-
-
-
-
-//const myPromise = new Promise((resolve, reject) => {
-  //  setTimeout(() => {
-    //    resolve("Guess this worked!");
-   // }, 1000);
-//});
-
-//getUserData(5)
-//  .then(function(x){
-//    console.log(x);
-// })
